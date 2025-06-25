@@ -1,104 +1,114 @@
-    //ie foreach 대응 IE에서는 document.querySelectorAll()과 같은 노드 배열에 관해서는 forEach메소드를 지원을 하지 않는다.
-    //  상단에 노드리스트에 관한 조건을 추가해준후 평소와 같이 사용한다.
-if (window.NodeList && !NodeList.prototype.forEach) {
-    NodeList.prototype.forEach = Array.prototype.forEach;
-}
+window.addEventListener('DOMContentLoaded',()=>{
 
-const navList = document.querySelectorAll('nav li')
-let section = document.querySelectorAll('#section-wrap > section')
-let pageNum =0
-let totalNum = section.length
-const BODY = document.querySelector('body')
-const navBtn = document.querySelector('.navBtn')
-// const modalBtn = document.querySelectorAll('.modalNav li')
+  gsap.registerPlugin(ScrollTrigger);
 
-// navBtn.addEventListener('click',function(e){
-//     e.preventDefault()
-//     BODY.classList.toggle('full')
-// })
+  
+
+  // 0
+  const tl= gsap.timeline()
 
 
+  tl.fromTo('.sc0 .text>*',{
+    opacity:0
+  },{
+    
+    opacity:1,
+    stagger:.3
+  })
+  tl.fromTo('.fixed-samdasoo',{
+    opacity:0,
+    bottom:'40%'
+  },{
+    
+    opacity:1,
+    bottom:'50%'
+  })
 
 
-navList.forEach(function(btn,index){
+  // 1
+  const scene1 = gsap.timeline()
 
-    btn.addEventListener('click',function(e){
-        e.preventDefault()
+  ScrollTrigger.create({
+    animation:scene1,
+    trigger:'.sc1',
+    start:'top 30%',
+    end:'top 50%',
+    scrub:3
+  })
 
-        gsap.to(window,{
-            scrollTo:{
-                y:'#s'+index
-            }
-        })
-    })
+
+  scene1.fromTo('.sc1 .text>*',{
+    opacity:0
+  },{
+    
+    opacity:1,
+    stagger:.3
+  })
+  // 2
+  const scene2 = gsap.timeline()
+
+  ScrollTrigger.create({
+    animation:scene2,
+    trigger:'.sc2',
+    start:'top 30%',
+    end:'top 50%',
+    scrub:3
+  })
+
+
+  scene2.fromTo('.sc2 .text>*',{
+    opacity:0
+  },{
+    
+    opacity:1,
+    stagger:.3
+  })
+  // 2
+  const scene3 = gsap.timeline()
+
+  ScrollTrigger.create({
+    animation:scene3,
+    trigger:'.sc3',
+    start:'top 30%',
+    end:'top 50%',
+    scrub:3
+  })
+
+
+  scene3.fromTo('.sc3 .text>*',{
+    opacity:0
+  },{
+    
+    opacity:1,
+    stagger:.3
+  })
+
+
+  // 3  
+
+  ScrollTrigger.create({
+    trigger:'.sc3',
+    start:"top 90%",
+    end:"bottom 10%",
+    toggleAction:"play reverse play reverse",
+    onEnter:()=>{
+      gsap.to('.fixed-samdasoo img',{
+        opacity:0,
+        y:20,
+        duration:.2,
+        ease:"power2.out"
+      })
+    },
+    onLeaveBack:()=>{
+      gsap.to('.fixed-samdasoo img',{
+        opacity:1,
+        y:0,
+        duration:.2,
+        ease:"power2.out"
+      })
+
+    },
+  })
+
+
 })
-// modalBtn.forEach(function(btn,index){
-
-//     btn.addEventListener('click',function(e){
-//         e.preventDefault()
-
-//         BODY.classList.remove('full')
-//         gsap.to(window,{
-//             scrollTo:{
-//                 y:'#s'+index
-//             }
-//         })
-//     })
-
-// })
-
-
-window.addEventListener('scroll',function(){
-    let scroll = window.scrollY || window.pageYOffset
-    console.log(scroll)
-    for(let i=0;i<totalNum;i++){
-
-        if(scroll > section[i].offsetTop - window.outerHeight /6 &&
-        scroll < section[i].offsetTop - window.outerHeight /6 + section[i].offsetHeight){
-            pageNum=i
-            funcObj['f_'+i]()
-        }
-    }
-    pageChangeFunc()
-})
-
-
-
-function pageChangeFunc(){
-    for(let i =0; i<totalNum;i++){
-        BODY.classList.remove('act-'+i)
-        section[i].classList.remove('active')
-        navList[i].classList.remove('active')
-    }
-    section[pageNum].classList.add('active')
-    navList[pageNum].classList.add('active')
-
-
-        BODY.classList.add('act-'+pageNum)
-
-}
-
-
-
-
-
-let funcObj = {
-    f_0: function () {
-
-    },
-    f_1: function () {
-
-    },
-    f_2: function () {
-        console.log(2)
-    },
-    f_3: function () {
-
-    },
-
-}
-
-funcObj['f_0']()
-
-
-

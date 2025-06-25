@@ -1,92 +1,151 @@
-gsap.registerPlugin(ScrollTrigger);
+window.addEventListener('DOMContentLoaded', () => {
+  gsap.registerPlugin(ScrollTrigger);
 
-const tl = gsap.timeline({
-  duration: 1
-})
+  const menuOpenBtn = document.querySelector('.menu-open')
+  const body = document.querySelector('body')
+  const langBtn = document.querySelector('.lang-wrap>dt')
 
-tl.fromTo('.sc0 .text>*', {
-  delay: 1,
-  opacity: 0,
-},
-  {
-    opacity: 1,
-    stagger: .2
+  const navList = document.querySelectorAll('nav ul li')
+  const section = document.querySelectorAll('#section-wrap>section')
+  const scrollUpBtn = document.querySelector('.scroll-up')
+
+
+  scrollUpBtn.addEventListener('click',()=>{
+     gsap.to(window, {
+        scrollTo: {
+          y: 0
+        }
+      })
   })
 
-tl.fromTo('.fix-samdasoo', {
-  opacity: 0,
-  bottom: '40%'
-}, {
-  opacity: 1,
-  bottom: '50%'
-
-})
+  let pageNum = 0
+  const totalNum = section.length
 
 
-const scene1 = gsap.timeline()
+  navList.forEach(function (nav, index) {
 
-ScrollTrigger.create({
-  animation: scene1,
-  trigger: '.sc1',
-  start: 'top 30%',
-  end: 'top 50%',
-  scrub: 3
-})
 
-scene1.fromTo('.sc1 .text>*', {
-  opacity: 0,
-  y: 10
-},
-  {
-    y: 0,
-    opacity: 1,
-    stagger: .3,
+    nav.addEventListener('click', function (e) {
+      e.preventDefault()
+      for (let i = 0; i < totalNum; i++) {
+        navList[i].classList.remove('active')
+      }
+      navList[index].classList.add('active')
+      gsap.to(window, {
+        scrollTo: {
+          y: '#s' + index
+        }
+      })
+    })
+  })
 
+
+
+
+
+  function pageChangeFunc() {
+    for (let i = 0; i < totalNum; i++) {
+      navList[i].classList.remove('active')
+      section[i].classList.remove('active')
+      body.classList.remove('act-'+i)
+    }
+
+    section[pageNum].classList.add('active')
+    navList[pageNum].classList.add('active')
+   
+    body.classList.add('act-' + pageNum)
   }
-)
-const scene2 = gsap.timeline()
 
-ScrollTrigger.create({
-  animation: scene2,
-  trigger: '.sc2',
-  start: 'top 30%',
-  end: 'top 50%',
-  scrub: 3
-})
 
-scene1.fromTo('.sc2 .text>*', {
-  opacity: 0,
-  y: 10
-},
-  {
-    y: 0,
-    opacity: 1,
-    stagger: .3,
 
+  let funcObj = {
+    f_0: function () {
+      console.log(0);
+
+    },
+    f_1: function () {
+      console.log(1);
+
+    },
+    f_2: function () {
+      console.log(2);
+
+    },
+    f_3: function () {
+      console.log(3);
+
+    },
   }
-)
-const scene3 = gsap.timeline()
 
-ScrollTrigger.create({
-  animation: scene3,
-  trigger: '.sc3',
-  start: 'top 30%',
-  end: 'top 50%',
-  scrub: 3
+
+
+
+  funcObj['f_0']()
+
+
+
+  window.addEventListener('scroll', function () {
+
+    let scroll = window.scrollY || window.pageYOffset
+
+    // console.log(scroll)
+
+    for (let i = 0; i < totalNum; i++) {
+      if (scroll > section[i].offsetTop - window.outerHeight / 6 &&
+        scroll < section[i].offsetTop - window.outerHeight / 6 + section[i].offsetHeight) {
+        pageNum = i
+        funcObj['f_'+i]()
+      }
+    }
+    pageChangeFunc()
+
+  })
+
+
+
+
+  langBtn.addEventListener('click', (e) => {
+    e.preventDefault()
+    const target = document.querySelector('.lang-wrap dd')
+
+    if (getComputedStyle(target).display === 'none') {
+
+      target.style.display = "block"
+
+      gsap.to(target, {
+        opacity: 1,
+        duration: .5,
+        ease: "power2.out"
+      })
+
+    } else {
+
+      gsap.to(target, {
+        opacity: 0,
+        duration: .5,
+        ease: "power2.out",
+        onComplete: () => {
+
+          target.style.display = "none"
+        }
+      })
+
+
+
+    }
+
+
+
+
+  })
+
+
+
+
+  menuOpenBtn.addEventListener('click', (e) => {
+    e.preventDefault()
+    body.classList.toggle('modalNav-Open')
+  })
+
+
 })
-
-// scene1.fromTo('.fix-samdasoo ', {
-//   opacity: 1,
-// },
-//   {
-//     opacity: 0,
-
-//   }
-// )
-
- const s3Swiper = new Swiper(".instar-slider", {
-      navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-      },
-    });
